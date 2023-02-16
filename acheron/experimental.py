@@ -2,9 +2,10 @@
 import subprocess
 
 # micromamba activate ach.0.8
-# cd acheron  
+# cd acheron
 
 # imports
+#the previous version that runs and returns nice output - but it is not our target data
 '''   
 def main():
     cmd1 = 'esearch -db genome -query brucella'.split()
@@ -20,7 +21,7 @@ def main():
                            stdout = subprocess.PIPE, stderr = subprocess.PIPE)
 
 '''
-
+# this is the subprocess I am working on
 def main():
     cmd1 = 'esearch -db assembly -query Brucella microti'.split()
     step1 = subprocess.run(cmd1, shell = False, check= False, stdout = subprocess.PIPE,
@@ -52,22 +53,21 @@ if __name__ == '__main__':
         print('Error : {}'.format(e))
 
 
-
+# some scipts
 # python acheron/experimental.py
 # esearch -db  -query "lycopene cyclase" | elink -related | elink -target protein | efilter -organism mouse -source refseq -mindate 2001 -maxdate 2010| efetch -format fasta
-#
 # esearch -db assembly -query "brucella" | efetch -format fasta > testfile.fa
 # -db genome: completely closed genomes; ref samples
 
-# esearch -db assembly -query "brucella" | efetch -format fasta
 
+#this is the code that works, need to be implemented via subprocess.run; may need to delete the efilter step
 '''
-esearch -db assembly -query "Brucella microti" | efilter -mindate 2000 | efetch -format docsum | xtract -pattern DocumentSummary -element FtpPath_RefSeq | awk -F"/" '{print $0"/"$NF"_genomic.fna.gz"}' > testfile.txt
+esearch -db assembly -query "Brucella microti" | efetch -format docsum | xtract -pattern DocumentSummary -element FtpPath_RefSeq | awk -F"/" '{print $0"/"$NF"_genomic.fna.gz"}' > testfile.txt
 nano testfile.txt
 wget -i testfile.txt
 '''
 
-
+#priliminary data counts cummary
 ''' total results:1241
 brucella suis: 86
 abortus: 334
