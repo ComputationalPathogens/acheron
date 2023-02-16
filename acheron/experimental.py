@@ -2,10 +2,10 @@
 import subprocess
 
 # micromamba activate ach.0.8
-# cd acheron
+# cd acheron  
 
 # imports
-'''
+'''   
 def main():
     cmd1 = 'esearch -db genome -query brucella'.split()
     step1 = subprocess.run(cmd1, shell = False, check= False, stdout = subprocess.PIPE,
