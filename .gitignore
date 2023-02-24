@@ -20,3 +20,9 @@ res_from_waff/*
 test.fasta
 predict_tests/*
 *.fasta
+/.idea/.gitignore
+/.idea/acheron.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/other.xml
+/.idea/vcs.xml
