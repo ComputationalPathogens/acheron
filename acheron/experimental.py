@@ -1,13 +1,14 @@
 #!usr/bin/env python
 ''' my user guide
-# micromamba activate ach.0.8
-# cd acheron      cd data        cd -        cd ~      rm -r data     mkdir data
-#         python experimental.py
-# etools command: esearch -db assembly -query "Brucella_microti" | efetch -format docsum | xtract -pattern DocumentSummary -element FtpPath_RefSeq | awk -F"/" '{print $0"/"$NF"_genomic.fna.gz"}' > testfile.txt | wget -i testfile.txt
-# count number files downloaded in current directory: ls -1 | wc -l
-# example filename: GCF_000022745.1_ASM2274v1.genomic.fna
-# command line unzipping file: gzip -dk GCF_000022745.1_ASM2274v1.genomic.fna.gz
-# move file up: cp GCF_947242805.1_B6.fna.gz ../
+micromamba activate ach.0.8
+cd acheron      cd data        cd -        cd ~      rm -r data     mkdir data
+        python experimental.py
+etools command: esearch -db assembly -query "Brucella_microti" | efetch -format docsum | xtract -pattern DocumentSummary -element FtpPath_RefSeq | awk -F"/" '{print $0"/"$NF"_genomic.fna.gz"}' > testfile.txt | wget -i testfile.txt
+count number files downloaded in current directory: ls -1 | wc -l
+example filename: GCF_000022745.1_ASM2274v1.genomic.fna
+command line unzipping file: gzip -dk GCF_000022745.1_ASM2274v1.genomic.fna.gz
+move file up: cp GCF_947242805.1_B6.fna.gz ../
+cmd: git push instead of ide method, see docs file
 '''
 
 import subprocess
