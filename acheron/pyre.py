@@ -2,6 +2,9 @@
 
 import pandas as pd
 import sys
+import gzip
+import os
+import glob
 
 # import torch
 # from torch import nn
@@ -21,7 +24,24 @@ def format_metadata(meta_file):
     infile = pd.read_csv(meta_file, delimiter='\t')
     print (infile.head())
     infile["Species"] = infile["Organism Name"].str.split(' ').str[:2].str.join(' ')
-    infile.to_csv("~/brucella_species_metadata.csv")
+    return infile
+    # infile.to_csv("~/brucella_species_metadata.csv")
+
+def create_fragments(metadata, genome_directory):
+    '''
+
+    :param metadata: pandas DF
+    :return:
+    '''
+
+    print(metadata.head())
+    f_name = metadata.iloc[1 , 0]
+    print(f_name)
+    full_name = ''.join([os.path.join(genome_directory, f_name), '*.genomic.fna.gz'])
+    print(full_name)
+    f_name = glob.glob(full_name)
+
+    gzip.open(os.path.join(genome_directory, f_name[0]))
 
 
 def main():
@@ -30,8 +50,10 @@ def main():
     :return:
     '''
     metadata_file = sys.argv[1]
-    format_metadata(metadata_file)
+    genome_directory = sys.argv[2]
 
+    metadata = format_metadata(metadata_file)
+    create_fragments(metadata, genome_directory)
 
 
 
