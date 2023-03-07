@@ -20,7 +20,7 @@ def format_metadata(meta_file):
     '''
     infile = pd.read_csv(meta_file, delimiter='\t')
     print (infile.head())
-    infile["Species"] = infile["Organism Name"].apply(lambda x: " ".join(x.split()[:2]))
+    infile["Species"] = infile["Organism Name"].str.split(' ').str[:2].str.join(' ')
     infile.to_csv("~/brucella_species_metadata.csv")
 
 
