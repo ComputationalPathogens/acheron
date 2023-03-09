@@ -38,6 +38,7 @@ def main():
     urls = file1.readlines()
     # print(urls)        # print all the links together
     # print(len(urls))   # check the number matches search result with number downloaded
+    '''
     for i in urls:
         i = (i[:-1])
         print(i)
@@ -45,8 +46,8 @@ def main():
         print(download_link)
         name = 'data/' + str(i[55:]) +'.genomic.fna.gz'
         print(name)
-        urllib.request.urlretrieve(download_link, name)
-
+        urllib.request.urlretrieve(download_link, name)/
+'''
         
 
 
