@@ -20,9 +20,9 @@ def reverse_complement(kmer):
 def revcomp_kmers(input_file):
     """
     Takes the filtered kmers file from Jellyfish and creates a dictionary with both canonical and revcomp kmers, with
-    the revcomp linked to the canonical.
+    the keys giving both canonical and revcomp, and values the canonical.
     :param input_file: The Jellyfish kmer file filtered for kmers within a given frequency distribution.
-    :return: The dictionary with {canonical} = {revcomp}
+    :return: The dictionary with {canonical} = {canonical} and {revcomp} = {canonical}
     """
 
     diction = {}
@@ -31,16 +31,17 @@ def revcomp_kmers(input_file):
         # This is more memory efficient than readlines() which stores the whole thing in memory
         for _ in fh:
             kmer = fh.readline().strip()
-            diction[kmer] = reverse_complement(kmer)
+            diction[kmer] = kmer
+            diction[reverse_complement(kmer)] = kmer
 
     return diction
 
 
 def save_parquet(final_dictionary, output_file):
     """
-    Take the final dictionary of {kmer} = {revcomp} and save it into a parquet file for later use.
+    Take the final dictionary of {kmer} = {kmer} / {revcomp} = {kmer} and save it into a parquet file for later use.
     This requires converting the dictionary into a dataframe.
-    :param final_dictionary: {kmer} = {revcomp}
+    :param final_dictionary: {kmer} = {kmer} / {revcomp} = {kmer}
     :param output_file: the parquet file location for the dataframe from dictionary to be saved.
     :return: Success
     """
@@ -53,7 +54,7 @@ def main():
     """
     Program to:
     1. Take in file of pre-filtered kmers
-    2. Create a dictionary of {kmer} = {revcomp}
+    2. Create a dictionary of {kmer} = {kmer} / {revcomp} = {kmer}
     3. Save this dictionary as a parquet file for fast loading in subsequent programs
     :return: Success
     """
