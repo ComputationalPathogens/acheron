@@ -5,12 +5,15 @@ import sys
 import ahocorasick
 import pathlib
 import gzip
+import pyarrow.parquet as pq
+import pyarrow as pa
 
 
 def get_df_from_parquet(kmer_parquet_file):
     """
     For simplicity, this will just return a small dataframe
-    :param kmer_parquet_file:
+    :param kmer_parquet_file: ourput parquet file having column 0 as revcomp and column 1 as canonical kmers
+    could be the output from add_reverse_complement
     :return:
     """
     df = pd.read_parquet(kmer_parquet_file)
@@ -24,12 +27,12 @@ def find_all_kmers(aho, genome_directory, kmer_df):
     """
 
     :param aho: ahocorasick automaton of all kmers
-    :param genome_directory:
-    :param kmer_df:
+    :param genome_directory: the directory containing genome files that end with .gz
+    :param kmer_df: dataframe from parquet file with 2 columns: reverse complements and canonical kmers
     :return: The final dataframe with rows as kmers, columns as genomes
     """
     # Count is only for testing
-    count = 0
+    # count = 0
 
     # Create the final dataframe, removing duplicates by creating a set and then
     # converting the set into a list
@@ -38,10 +41,11 @@ def find_all_kmers(aho, genome_directory, kmer_df):
     for gz_file in pathlib.Path(genome_directory).glob('*.gz'):
 
         # <-This is just for testing to limit the number of genomes and print the df
-        count += 1
-        if count == 5:
-            print(final_df)
-            return
+
+        # count += 1
+        # if count == 2:
+        #     print(final_df)
+        #     return
         # ->
 
         with gzip.open(gz_file, 'rt') as fasta:
@@ -64,8 +68,8 @@ def find_all_kmers(aho, genome_directory, kmer_df):
 def create_aho_automaton(kmer_df):
     """
     Create the ahocorasick automaton
-    :param kmer_df:
-    :return: aho
+    :param kmer_df: dataframe from parquet file with 2 columns: reverse complements and canonical kmers
+    :return: aho automaton
     """
     aho = ahocorasick.Automaton()
 
@@ -78,6 +82,16 @@ def create_aho_automaton(kmer_df):
     aho.make_automaton()
     return aho
 
+def save_parquet1(final_df, output_file):
+    """
+    Take the final df and save it into a parquet file for later use.
+    :param final_df: The final dataframe with rows as kmers, columns as genomes
+    :param output_file: the parquet file location for the dataframe from dictionary to be saved.
+    :return: Success
+    """
+    df = pd.DataFrame(final_df.items())
+    table = pa.Table.from_pandas(df)
+    pq.write_table(table, output_file)
 
 def main():
     """
@@ -87,7 +101,7 @@ def main():
     3. Save output table as kmers (rows), genomes (columns), using only canonical kmers
     :return: Success
     """
-
+# rev_comp_dictionary.parquet data final_df.parquet
     #  Ensure both arguments are specified
     if len(sys.argv) > 3:
         kmer_parquet_file = sys.argv[1]
@@ -99,9 +113,11 @@ def main():
 
     kmer_df = get_df_from_parquet(kmer_parquet_file)
     aho = create_aho_automaton(kmer_df)
-    output_table = find_all_kmers(aho, directory_of_genomes, kmer_df)
-    print(output_table)
+    final_df = find_all_kmers(aho, directory_of_genomes, kmer_df)
+    # print(final_df)
     # Still need to create a function to save the output table ...
+    save_parquet1(final_df, output_file)
+
 
 
 if __name__ == '__main__':
