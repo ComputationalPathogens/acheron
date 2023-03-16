@@ -32,7 +32,7 @@ def find_all_kmers(aho, genome_directory, kmer_df):
     :return: The final dataframe with rows as kmers, columns as genomes
     """
     # Count is only for testing
-    # count = 0
+    count = 0
 
     # Create the final dataframe, removing duplicates by creating a set and then
     # converting the set into a list
@@ -42,10 +42,10 @@ def find_all_kmers(aho, genome_directory, kmer_df):
 
         # <-This is just for testing to limit the number of genomes and print the df
 
-        # count += 1
-        # if count == 2:
-        #     print(final_df)
-        #     return
+        count += 1
+        if count == 5:
+            print(final_df)
+            return final_df
         # ->
 
         with gzip.open(gz_file, 'rt') as fasta:
@@ -89,8 +89,8 @@ def save_parquet1(final_df, output_file):
     :param output_file: the parquet file location for the dataframe from dictionary to be saved.
     :return: Success
     """
-    df = pd.DataFrame(final_df.items())
-    table = pa.Table.from_pandas(df)
+    # df = pd.DataFrame(final_df.items())
+    table = pa.Table.from_pandas(final_df)
     pq.write_table(table, output_file)
 
 def main():
