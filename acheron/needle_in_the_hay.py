@@ -39,7 +39,7 @@ def find_all_kmers(aho, genome_directory, kmer_df):
 
         # <-This is just for testing to limit the number of genomes and print the df
         count += 1
-        if count == 5:
+        if count == 3:
             print(final_df)
             return
         # ->
