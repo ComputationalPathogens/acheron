@@ -35,9 +35,11 @@ def find_all_kmers(aho, genome_directory, kmer_df):
     # Create the final dataframe, removing duplicates by creating a set and then
     # converting the set into a list
     final_df = pd.DataFrame(index=[*set(kmer_df[1])])
+    files = []
 
     for gz_file in pathlib.Path(genome_directory).glob('*.gz'):
         print("Reading {}".format(gz_file))
+        files.append(gz_file)
 
         with gzip.open(gz_file, 'rt') as fasta:
             # New genome column, currently names as file name
@@ -53,7 +55,8 @@ def find_all_kmers(aho, genome_directory, kmer_df):
                 # The column '1' contains the canonical kmer
                 # .at[] works on single values and is faster than loc[]
                 final_df.at[kmer_df.at[v, 1], gz_file] = 1
-
+        if len(files) == 3:
+            break
 
     return final_df
 
