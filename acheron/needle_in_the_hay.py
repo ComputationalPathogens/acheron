@@ -38,7 +38,7 @@ def find_all_kmers(aho, genome_directory, kmer_df):
 
     for gz_file in pathlib.Path(genome_directory).glob('*.gz'):
         print("Reading {}".format(gz_file))
-        
+
         with gzip.open(gz_file, 'rt') as fasta:
             # New genome column, currently names as file name
             # Default every kmer to 0 for each genome
@@ -51,8 +51,9 @@ def find_all_kmers(aho, genome_directory, kmer_df):
                 # We need to look up the canonical kmer in the original kmer df
                 # 'v' is the index which could be canonical or revcomp
                 # The column '1' contains the canonical kmer
-                final_df.loc[kmer_df.loc[v, 1], gz_file] = 1
-        break
+                # .at[] works on single values and is faster than loc[]
+                final_df.at[kmer_df.at[v, 1], gz_file] = 1
+
 
     return final_df
 
