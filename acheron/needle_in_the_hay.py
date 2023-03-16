@@ -61,6 +61,7 @@ def find_all_kmers(aho, genome_directory, kmer_df):
                 # 'v' is the index which could be canonical or revcomp
                 # The column '1' contains the canonical kmer
                 final_df.loc[kmer_df.loc[v, 1], gz_file] = 1
+        break
 
     return final_df
 
