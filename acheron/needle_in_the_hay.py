@@ -7,6 +7,7 @@ import pathlib
 import gzip
 import pyarrow.parquet as pq
 import pyarrow as pa
+import numpy as np
 
 
 def get_df_from_parquet(kmer_parquet_file):
@@ -34,7 +35,7 @@ def find_all_kmers(aho, genome_directory, kmer_df):
 
     # Create the final dataframe, removing duplicates by creating a set and then
     # converting the set into a list
-    final_df = pd.DataFrame(index=[*set(kmer_df[1])])
+    final_df = pd.DataFrame(index=[*set(kmer_df[1])], dtype=np.int8)
     files = []
 
     for gz_file in pathlib.Path(genome_directory).glob('*.gz'):
@@ -44,7 +45,7 @@ def find_all_kmers(aho, genome_directory, kmer_df):
         with gzip.open(gz_file, 'rt') as fasta:
             # New genome column, currently names as file name
             # Default every kmer to 0 for each genome
-            final_df[gz_file] = 0
+            final_df[gz_file] = np.int8(0)
             alldata = str(fasta.readlines())
 
             # key is location of the kmer, and v is the kmer itself
@@ -54,7 +55,9 @@ def find_all_kmers(aho, genome_directory, kmer_df):
                 # 'v' is the index which could be canonical or revcomp
                 # The column '1' contains the canonical kmer
                 # .at[] works on single values and is faster than loc[]
-                final_df.at[kmer_df.at[v, 1], gz_file] = 1
+                final_df.at[kmer_df.at[v, 1], gz_file] = np.int8(1)
+            # final_df[gz_file] = final_df[gz_file].astype('int8') ###############
+        # fasta.close() #################
         if len(files) == 3:
             break
 
@@ -95,7 +98,6 @@ def main():
     3. Save output table as kmers (rows), genomes (columns), using only canonical kmers
     :return: Success
     """
-# rev_comp_dictionary.parquet data final_df.parquet
     #  Ensure both arguments are specified
     if len(sys.argv) > 3:
         kmer_parquet_file = sys.argv[1]
@@ -111,6 +113,7 @@ def main():
     print("aho created")
     final_df = find_all_kmers(aho, directory_of_genomes, kmer_df)
     print("final df made")
+    print(final_df.info(memory_usage="deep"))
     # Still need to create a function to save the output table ...
     save_parquet1(final_df, output_file)
 
