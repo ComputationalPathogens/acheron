@@ -17,15 +17,12 @@ df = df.swapaxes("index", "columns")
 df = df.astype('int8')
 # print(df.head(10))
 
-
-
-
 with open('final_df_transposed_test.csv', 'w', newline = '') as f:
     writer_object = writer(f)
     # for row in df.rows():
     writer_object.writerow(df.columns)
     for row in df.itertuples(index = False, name = None):
-            writer_object.writerow([np.int8(val) for val in row])
+        writer_object.writerow([np.int8(val) for val in row])
 
 '''
 count =0
