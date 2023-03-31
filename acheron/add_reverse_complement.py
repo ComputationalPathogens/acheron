@@ -58,7 +58,8 @@ def main():
     3. Save this dictionary as a parquet file for fast loading in subsequent programs
     :return: Success
     """
-
+    # best_kmers = 'data/best_kmers_canonical.jf'
+    # output_file = 'rev_comp_dictionary.parquet'
     #  Ensure both arguments are specified
     if len(sys.argv) > 2:
         best_kmers = sys.argv[1]
@@ -68,7 +69,10 @@ def main():
         sys.exit(1)
 
     final_dictionary = revcomp_kmers(best_kmers)
+    # final_dictionary = revcomp_kmers('data/best_kmers_canonical.jf')
+    # save_parquet(final_dictionary, 'rev_comp_dictionary.parquet')
     save_parquet(final_dictionary, output_file)
+
 
 
 if __name__ == '__main__':
