@@ -36,11 +36,11 @@ def find_all_kmers(aho, genome_directory, kmer_df):
     # Create the final dataframe, removing duplicates by creating a set and then
     # converting the set into a list
     final_df = pd.DataFrame(index=[*set(kmer_df[1])], dtype=np.int8)
-    files = []
+
 
     for gz_file in pathlib.Path(genome_directory).glob('*.gz'):
         print("Reading {}".format(gz_file))
-        files.append(gz_file)
+
 
         with gzip.open(gz_file, 'rt') as fasta:
             # New genome column, currently names as file name
@@ -58,8 +58,7 @@ def find_all_kmers(aho, genome_directory, kmer_df):
                 final_df.at[kmer_df.at[v, 1], gz_file] = np.int8(1)
             # final_df[gz_file] = final_df[gz_file].astype('int8') ###############
         # fasta.close() #################
-        if len(files) == 3:
-            break
+
 
     return final_df
 
@@ -113,7 +112,7 @@ def main():
     print("aho created")
     final_df = find_all_kmers(aho, directory_of_genomes, kmer_df)
     print("final df made")
-    print(final_df.info(memory_usage="deep"))
+    # print(final_df.info(memory_usage="deep"))
     # Still need to create a function to save the output table ...
     save_parquet1(final_df, output_file)
 
